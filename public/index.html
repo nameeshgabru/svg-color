@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .container {
+        transform: translate(-50%, 0%);
+        left: 50%;
+        position: absolute;
+      }
+      .colorinput {
+        width: 50px;
+        height: 50px;
+        display: inline-block;
+        margin: 20px;
+        transition: all 0.1s ease-in;
+        border-radius: 50%;
+      }
+      .selected {
+        transform: rotate(45deg);
+        border-radius: 0%;
+      }
+      .yellow {
+        background-color: yellow;
+      }
+      .green {
+        background-color: green;
+      }
+      .purple {
+        background-color: purple;
+      }
+      .orange {
+        background-color: orange;
+      }
+      .red {
+        background-color: red;
+      }
+      .black {
+        background-color: black;
+      }
+      .grey {
+        background-color: grey;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div style="text-align: center">
+        <select id="svgSelect">
+          <option value="flower1">Flower1</option>
+          <option value="flower2">Flower2</option>
+          <option value="pot1">Pot1</option>
+          <option value="parrot">Parrot1</option>
+          <option value="boy">Boy</option>
+        </select>
+      </div>
+      <object
+        data="flower1.svg"
+        type="image/svg+xml"
+        id="svg"
+        style="max-width: 400px"
+      ></object>
+      <div style="max-width: 400px">
+        <div id="yellow" class="yellow colorinput selected"></div>
+        <div id="green" class="green colorinput"></div>
+        <div id="purple" class="purple colorinput"></div>
+        <div id="orange" class="orange colorinput"></div>
+        <div id="red" class="red colorinput"></div>
+        <div id="grey" class="grey colorinput"></div>
+        <div id="black" class="black colorinput"></div>
+      </div>
+    </div>
+    <script>
+      var selectedColor = "yellow";
+      var inputColors = document.getElementsByClassName("colorinput");
+      for (let l = 0; l < inputColors.length; l++) {
+        handleSingleInputColor(inputColors[l]);
+      }
+      function handleSingleInputColor(color) {
+        color.addEventListener("click", function () {
+          changeInputSelection(this.getAttribute("id"));
+        });
+      }
+      function changeInputSelection(color) {
+        //remove old selected class
+        var oldSelected = document.getElementsByClassName("selected")[0];
+        oldSelected.classList.remove("selected");
+        var newSelected = document.getElementById(color);
+        newSelected.classList.add("selected");
+        selectedColor = color;
+      }
+      document.getElementById("svg").addEventListener("load", function () {
+        addSvgEvents();
+      });
+      document
+        .getElementById("svgSelect")
+        .addEventListener("change", function () {
+          document
+            .getElementById("svg")
+            .setAttribute("data", this.value + ".svg");
+        });
+      function addSvgEvents() {
+        var svg = document
+          .getElementById("svg")
+          .contentDocument.getElementsByTagName("svg")[0];
+        // console.log(svg);
+        var paths = svg.getElementsByTagName("path");
+        for (let l = 0; l < paths.length; l++) {
+          handleSinglePath(paths[l]);
+        }
+      }
+      function handleSinglePath(path) {
+        path.setAttribute("fill", "lightgrey");
+        path.setAttribute("stroke", "black");
+        path.addEventListener("click", function () {
+          this.setAttribute("fill", selectedColor);
+        });
+      }
+    </script>
+  </body>
+</html>
